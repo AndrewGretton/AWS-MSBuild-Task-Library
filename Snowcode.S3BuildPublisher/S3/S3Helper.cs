@@ -7,6 +7,7 @@ using Amazon.S3.Util;
 using Amazon.S3.Model;
 using Amazon.S3;
 using Snowcode.S3BuildPublisher.Client;
+using System.Web;
 
 namespace Snowcode.S3BuildPublisher.S3
 {
@@ -26,7 +27,7 @@ namespace Snowcode.S3BuildPublisher.S3
 
         public S3Helper(AwsClientDetails clientDetails)
         {
-            Client = AWSClientFactory.CreateAmazonS3Client(clientDetails.AwsAccessKeyId, clientDetails.AwsSecretAccessKey);
+            Client = AWSClientFactory.CreateAmazonS3Client(clientDetails.AwsAccessKeyId, clientDetails.AwsSecretAccessKey, RegionEndpoint.EUWest1);
         }
 
         public S3Helper(AmazonS3 amazonS3Client)
@@ -203,12 +204,14 @@ namespace Snowcode.S3BuildPublisher.S3
         {
             S3CannedACL acl = publicRead ? S3CannedACL.PublicRead : S3CannedACL.Private;
 
-            var request = new PutObjectRequest();
-            request
-                .WithCannedACL(acl)
-                .WithFilePath(file)
-                .WithBucketName(bucketName)
-                .WithKey(key);
+            var request = new PutObjectRequest()
+            {
+                BucketName = bucketName,
+                Key = key,
+                FilePath = file,
+                CannedACL = acl,
+                ContentType = MimeMapping.GetMimeMapping(file)
+            };
 
             Client.PutObject(request);
         }

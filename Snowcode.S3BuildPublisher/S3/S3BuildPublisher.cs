@@ -90,9 +90,9 @@ namespace Snowcode.S3BuildPublisher.S3
 
         private void ValidateBucketName()
         {
-            if (DestinationBucket.Contains("."))
+            if (DestinationBucket.Contains("..") || DestinationBucket.StartsWith(".") || DestinationBucket.EndsWith("."))
             {
-                throw new Exception("Bucket must not contain a .");
+                throw new Exception("Bucket name is invalid");
             }
         }
 
