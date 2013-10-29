@@ -32,9 +32,9 @@
     <DocumentationFile>bin\Release\Snowcode.S3BuildPublisher.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AWSSDK, Version=1.2.3.2, Culture=neutral, PublicKeyToken=cd2d24cd2bace800, processorArchitecture=MSIL">
+    <Reference Include="AWSSDK, Version=1.5.37.0, Culture=neutral, PublicKeyToken=9f476d3089b52be3, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Binaries\AWS SDK for .NET\1.2.3.2\AWSSDK.dll</HintPath>
+      <HintPath>..\packages\AWSSDK.1.5.37.0\lib\AWSSDK.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Build.Framework" />
     <Reference Include="Microsoft.Build.Utilities.v3.5" />
@@ -118,6 +118,7 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="IAMExamples.proj" />
+    <None Include="packages.config" />
     <None Include="PublishData.proj">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>

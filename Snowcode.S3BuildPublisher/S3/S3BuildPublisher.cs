@@ -20,6 +20,22 @@ namespace Snowcode.S3BuildPublisher.S3
         public string[] SourceFiles { get; set; }
 
         /// <summary>
+        /// If set to true, files will be written in the directory structure they came from. BasePathIdentifier must be set.
+        /// </summary>
+        public bool PreserveLocalFileStructure { get; set; }
+
+        /// <summary>
+        /// The basepath to use when uploading. Example: Uploading d:\test\folder\assets\dog.jpg, you'd set 
+        /// this to be "\assets" if you wanted to store "\assets\dog.jpg" in S3.
+        /// </summary>
+        public string BasePathIdentifier { get; set; }
+
+        /// <summary>
+        /// Force all S3 keys to be lower case
+        /// </summary>
+        public bool MakeLowerCase { get; set; }
+
+        /// <summary>
         /// Gets or sets the destination folder.
         /// </summary>
         public string DestinationFolder { get; set; }
@@ -103,7 +119,7 @@ namespace Snowcode.S3BuildPublisher.S3
         {
             using (var helper = new S3Helper(clientDetails))
             {
-                helper.Publish(SourceFiles, DestinationBucket, DestinationFolder, PublicRead);
+                helper.Publish(SourceFiles, DestinationBucket, DestinationFolder, PublicRead, BasePathIdentifier, PreserveLocalFileStructure, MakeLowerCase);
                 Log.LogMessage(MessageImportance.Normal, "Published {0} files to S3", SourceFiles.Length);
             }
         }

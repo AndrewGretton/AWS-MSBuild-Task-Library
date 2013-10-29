@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.IO;
 using Amazon;
@@ -59,13 +60,28 @@ namespace Snowcode.S3BuildPublisher.S3
         /// <param name="bucketName"></param>
         /// <param name="folder"></param>
         /// <param name="publicRead"></param>
-        public void Publish(string[] files, string bucketName, string folder, bool publicRead)
+        public void Publish(string[] files, string bucketName, string folder, bool publicRead, string basePath, bool preserveLocalFileStructure, bool makeLowerCase)
         {
             CreateBucketIfNeeded(bucketName);
 
-            string destinationFolder = GetDestinationFolder(folder);
+            files = files.Select(f => f.ToLowerInvariant()).ToArray();
 
-            StoreFiles(files, bucketName, destinationFolder, publicRead);
+            if (preserveLocalFileStructure)
+            {
+                foreach (var file in files)
+                {
+                    int marker = file.IndexOf(basePath);
+                    var s3path = file.Substring(marker + basePath.Length, file.Length - file.IndexOf(basePath) - basePath.Length);
+                    s3path = s3path.Replace("\\", "/");
+                    StoreFile(file, s3path, bucketName, publicRead);
+                }
+            }
+            else
+            {
+                string destinationFolder = GetDestinationFolder(folder);
+
+                StoreFiles(files, bucketName, destinationFolder, publicRead);
+            }
         }
 
         /// <summary>
